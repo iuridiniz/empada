@@ -1,0 +1,300 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: EMPADA 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2009-09-10 21:07-0300\n"
+"PO-Revision-Date: 2009-09-12 13:54-0300\n"
+"Last-Translator: Iuri Diniz <iuridiniz@gmail.com>\n"
+"Language-Team: IGDIUM\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: BRAZIL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: admin.py:9
+#: admin.py:26
+#: admin.py:40
+msgid "Basic information"
+msgstr "Informação básica"
+
+#: admin.py:11
+#: admin.py:28
+#: admin.py:42
+msgid "Extra information"
+msgstr "Informação extra"
+
+#: admin.py:13
+#: admin.py:30
+#: admin.py:44
+msgid "Financial information"
+msgstr "Informação financeira"
+
+#: admin.py:15
+msgid "Address information"
+msgstr "Informação de endereçamento"
+
+#: models.py:15
+#: models.py:125
+#: models.py:144
+#: models.py:191
+#: models.py:212
+msgid "name"
+msgstr "nome"
+
+#: models.py:20
+msgid "document ID"
+msgstr "número do documento"
+
+#: models.py:25
+msgid "address"
+msgstr "endereço"
+
+#: models.py:30
+msgid "city"
+msgstr "cidade"
+
+#: models.py:35
+msgid "state"
+msgstr "estado"
+
+#: models.py:40
+msgid "email"
+msgstr "email"
+
+#: models.py:45
+msgid "telephone"
+msgstr "telefone"
+
+#: models.py:50
+msgid "maximum credit"
+msgstr "crédito máximo"
+
+#: models.py:57
+#: models.py:66
+#: models.py:89
+#: models.py:404
+msgid "client"
+msgstr "cliente"
+
+#: models.py:58
+msgid "clients"
+msgstr "clientes"
+
+#: models.py:70
+#: models.py:171
+#: models.py:283
+msgid "description"
+msgstr "descrição"
+
+#: models.py:74
+#: models.py:95
+#: models.py:174
+#: models.py:286
+msgid "date"
+msgstr "data"
+
+#: models.py:81
+msgid "client modification history"
+msgstr "histórico de modificação de clientes"
+
+#: models.py:82
+msgid "client modification histories"
+msgstr "históricos de modificação de clientes"
+
+#: models.py:92
+#: models.py:407
+msgid "amount"
+msgstr "quantia"
+
+#: models.py:98
+msgid "is a payment"
+msgstr "é um pagamento"
+
+#: models.py:104
+#: models.py:332
+#: models.py:344
+#: models.py:398
+msgid "selling"
+msgstr "venda"
+
+#: models.py:115
+msgid "client credit"
+msgstr "crédito de cliente"
+
+#: models.py:116
+msgid "client credits"
+msgstr "crédito de clientes"
+
+#: models.py:132
+msgid "product type"
+msgstr "tipo de produto"
+
+#: models.py:133
+msgid "product types"
+msgstr "tipos de produto"
+
+#: models.py:140
+#: models.py:196
+#: models.py:264
+msgid "type"
+msgstr "tipo"
+
+#: models.py:147
+#: models.py:221
+#: models.py:252
+msgid "price"
+msgstr "preço"
+
+#: models.py:150
+#: models.py:216
+msgid "is active"
+msgstr "está ativo"
+
+#: models.py:158
+#: models.py:167
+#: models.py:243
+#: models.py:304
+#: models.py:340
+msgid "product"
+msgstr "produto"
+
+#: models.py:159
+msgid "products"
+msgstr "produtos"
+
+#: models.py:181
+msgid "product modification history"
+msgstr "histórico de modificação de produtos"
+
+#: models.py:182
+msgid "product modification histories"
+msgstr "históricos de modificação de produtos"
+
+#: models.py:203
+msgid "ingredient type"
+msgstr "tipo de Ingrediente"
+
+#: models.py:204
+msgid "ingredient types"
+msgstr "tipos de Ingrediente"
+
+#: models.py:229
+#: models.py:248
+#: models.py:279
+#: models.py:375
+msgid "ingredient"
+msgstr "Ingrediente"
+
+#: models.py:230
+msgid "ingredients"
+msgstr "Ingredientes"
+
+#: models.py:236
+msgid "Fixed"
+msgstr "Fixo"
+
+#: models.py:237
+msgid "Optional"
+msgstr "Opcional"
+
+#: models.py:238
+msgid "Included"
+msgstr "Incluso"
+
+#: models.py:257
+#: models.py:352
+msgid "quantity"
+msgstr "quantidade"
+
+#: models.py:271
+msgid "ingredient of a product"
+msgstr "Ingrediente de um produto"
+
+#: models.py:272
+msgid "ingredients of a product"
+msgstr "ingredientes de um produto"
+
+#: models.py:293
+msgid "ingredient modification history"
+msgstr "histórico de modificação de ingrediente"
+
+#: models.py:294
+msgid "ingredient modification histories"
+msgstr "históricos de modificação de ingrediente"
+
+#: models.py:308
+msgid "ticket"
+msgstr "ficha"
+
+#: models.py:312
+msgid "is paid"
+msgstr "está pago"
+
+#: models.py:316
+msgid "amount paid"
+msgstr "quantia paga"
+
+#: models.py:320
+msgid "incoming time"
+msgstr "hora de entrada"
+
+#: models.py:324
+msgid "outcoming time"
+msgstr "hora de saída"
+
+#: models.py:333
+msgid "sellings"
+msgstr "vendas"
+
+#: models.py:349
+msgid "special instuctions"
+msgstr "instruções especiais"
+
+#: models.py:356
+#: models.py:384
+msgid "selling unit price"
+msgstr "preço por unidade vendida"
+
+#: models.py:360
+msgid "selling date"
+msgstr "data da venda"
+
+#: models.py:367
+#: models.py:380
+msgid "selling product"
+msgstr "produto vendido"
+
+#: models.py:368
+msgid "selling products"
+msgstr "produtos vendidos"
+
+#: models.py:389
+msgid "selling product ingredient"
+msgstr "ingrediente de produto vendido"
+
+#: models.py:390
+msgid "selling product ingredients"
+msgstr "ingredientes de produto vendido"
+
+#: models.py:410
+msgid "is credit"
+msgstr "é a crédito"
+
+#: models.py:418
+msgid "selling payment"
+msgstr "pagamento de uma venda"
+
+#: models.py:419
+msgid "selling payments"
+msgstr "pagamentos de uma venda"
+
+#~ msgid "Extra Information"
+#~ msgstr "Informação Extra"
+
