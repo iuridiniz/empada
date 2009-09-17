@@ -55,7 +55,7 @@ class Pos:
 
     def __setup_tokens__(self):
         b = self.builder.get_object("button_ticketlist")
-        w = self.builder.get_object("window_token")
+        w = self.builder.get_object("window_ticket")
         b.connect("clicked", lambda x: w.show())
 
     def update_clock(self, label_clock):
@@ -66,8 +66,6 @@ class Pos:
     
 
     def main(self):
-        print _("Hello")
-        print _("label")
         self.window.show()
         gtk.main()
 
