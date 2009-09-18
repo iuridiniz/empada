@@ -371,7 +371,7 @@ class Selling(models.Model):
             q = Selling.objects.filter(ticket=self.ticket, is_opened=True)
             assert q.count() <= 1, "System have tickets opened under same number: %d" % (self.ticket,) 
             if q.count() > 0 and q[0].id != self.id:
-                raise ValidationError, "System has ticket already opened with %d" % (self.ticket,)
+                raise ValidationError, "System has a ticket already opened with ticket id %d" % (self.ticket,)
         # call the real save method
         super(Selling, self).save(force_insert, force_update)
 
@@ -412,8 +412,14 @@ class Selling(models.Model):
         assert self.is_opened == False, "Selling should be closed to be reopened"
         assert self.outcoming_time is not None, "Outcoming time should be setted on a closed selling"
 
+        if self.ticket:
+            q = Selling.objects.filter(ticket=self.ticket, is_opened=True)
+            assert q.count() <= 1, "System have tickets opened under same number: %d" % (self.ticket,) 
+            if q.count() > 0:
+                raise ValidationError, "System has a ticket already opened with ticket id %d" % (self.ticket,)
+
         self.outcoming_time = None
-        self.is_opened = False
+        self.is_opened = True
         self.save()
         # TODO: write user to log
         # TODO: refactor this by implement a decoration
