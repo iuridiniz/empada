@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: EMPADA 1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-09-10 21:07-0300\n"
-"PO-Revision-Date: 2009-09-12 13:54-0300\n"
+"PO-Revision-Date: 2009-09-19 00:00-0300\n"
 "Last-Translator: Iuri Diniz <iuridiniz@gmail.com>\n"
 "Language-Team: IGDIUM\n"
 "MIME-Version: 1.0\n"
@@ -179,11 +179,11 @@ msgstr "históricos de modificação de produtos"
 
 #: models.py:203
 msgid "ingredient type"
-msgstr "tipo de Ingrediente"
+msgstr "tipo de ingrediente"
 
 #: models.py:204
 msgid "ingredient types"
-msgstr "tipos de Ingrediente"
+msgstr "tipos de ingrediente"
 
 #: models.py:229
 #: models.py:248
