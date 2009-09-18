@@ -2,7 +2,7 @@ import unittest
 
 from django.core.exceptions import ValidationError
 
-from empada.pos.models import Selling
+from empada.pos.models import Selling, Product, SellingProduct
 
 from datetime import datetime
 
@@ -107,7 +107,40 @@ class SalesDuplicateTicketTest(unittest.TestCase):
         for id in self.ids:
             Selling.objects.get(id=id).delete()
 
+class SalesBuyProductsTest(unittest.TestCase):
+    def setUp(self):
+        # create 3 simple products
+        self.p1 = Product.objects.create(name="Coxinha de frango", price=float(1.00))
+        self.p2 = Product.objects.create(name="Pastel de carne", price=float(2.30))
+        self.p3 = Product.objects.create(name="Coca-Cola 350ml", price=float(1.20))
 
+    def tearDown(self):
+        self.p1.delete()
+        self.p2.delete()
+        self.p3.delete()
 
+    def testSaleProducts(self):
+        # Selling without ticket
+        s = Selling.objects.create()
+
+        # 1 x p1
+        s.addProduct(self.p1)
+        self.assertTrue(s.product.count() == 1)
+        self.assertAlmostEqual(s.amount, self.p1.price)
+
+        # 2 x p2
+        s.addProduct(self.p2, quantity=2)
+        self.assertTrue(s.product.count() == 3)
+        self.assertAlmostEqual(s.amount, self.p1.price + 2 * self.p2.price)
+
+        # 3 x p3 with instructions
+        s.addProduct(self.p3, quantity=3, instructions="with lemon")
+        self.assertTrue(s.product.count() == 6)
+        self.assertAlmostEqual(s.amount, self.p1.price + 2 * self.p2.price + 3 * self.p3.price)
+
+        # 1 x p3 with a special price
+        s.addProduct(self.p3, quantity=1, price=1.00)
+        self.assertTrue(s.product.count() == 7)
+        self.assertAlmostEqual(s.amount, self.p1.price + 2 * self.p2.price + 3 * self.p3.price + 1.00)
 
         

@@ -9,7 +9,24 @@ from django.utils.translation import ugettext as _
 # Create your models here.
 
 #####################################################################
+class Unit(models.Model):
+    name = models.CharField(max_length=30,
+        verbose_name=_L("name")
+    )
+    TYPE_CHOICES = (
+        ('I', _L('Integer')),
+        ('F', _L('Fraction')),
+    )
 
+    type = models.CharField(
+        max_length=1,
+        choices=TYPE_CHOICES, 
+        verbose_name=_L('type'),
+        default='I'
+    )
+
+
+#####################################################################
 class Client(models.Model):
     DEFAULT_CREDIT=float(25.00)
     name = models.CharField(
@@ -345,7 +362,7 @@ class Selling(models.Model):
 
     amount_paid = models.FloatField(
         verbose_name=_L('amount paid'), 
-        default=0.00
+        default=float(0.00)
     )
 
     incoming_time = models.DateTimeField(
@@ -364,6 +381,26 @@ class Selling(models.Model):
         default=True
     )
 
+    
+    
+    def __amount__(self):
+        amount = float(0.00)
+        for sp in SellingProduct.objects.filter(selling=self):
+            amount += sp.quantity * sp.selling_unit_price
+        return amount
+    
+    amount = property(__amount__)
+
+    def addProduct(self, product, quantity=1, instructions="", price=None):
+        p = product.price
+        if price:
+            p = price
+        for i in range(0,quantity):
+            #self.product.add(product, instructions=instructions, selling_unit_price=p)
+            sp = SellingProduct(product=product, selling=self, instructions=instructions, selling_unit_price=p)
+            sp.save()
+        
+        
 
     def save(self, force_insert=False, force_update=False):
         #verify if TICKET is already opened.
