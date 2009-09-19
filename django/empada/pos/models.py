@@ -9,6 +9,8 @@ from django.utils.translation import ugettext
 
 from exceptions import DuplicateOpenedTicket, OperationNotPermited
 
+
+FLOAT_PRECISION=0.0000001
 # Create your models here.
 
 #####################################################################
@@ -401,8 +403,6 @@ class Selling(models.Model):
         default=True
     )
 
-    
-    
     def __amount__(self):
         amount = float(0.00)
         for sp in SellingProduct.objects.filter(selling=self):
@@ -414,6 +414,7 @@ class Selling(models.Model):
     def addProduct(self, product, quantity=1, instructions="", price=None):
         if self.is_closed:
             raise OperationNotPermited, "Cannot add product to a closed selling"
+        
         p = product.price
         if price:
             p = price
@@ -446,18 +447,18 @@ class Selling(models.Model):
 
     is_closed = property(__is_closed__)
 
-    def __verify_is_closed__(self):
-        now = datetime.now()
-        if self.outcoming_time is None:
-            return False
-        if now >= self.outcoming_time:
-            return True
-        
-        return False
+    #def __verify_is_closed__(self):
+    #    now = datetime.now()
+    #    if self.outcoming_time is None:
+    #        return False
+    #    if now >= self.outcoming_time:
+    #        return True
+    #
+    #    return False
         
     def close(self):
         if self.is_closed:
-            return
+            raise OperationNotPermited, "Cannot close this selling because it is already closed"
 
         assert self.is_opened == True, "Selling should be opened to be closed"
         assert self.outcoming_time is None, "Outcoming time should be None on an opened selling"
@@ -470,10 +471,23 @@ class Selling(models.Model):
         desc = ugettext("Someone closed this selling")
         SellingHistory.objects.create(selling=self, description=desc)
         
+    def pay(self,amount=0.00):
+        if self.is_closed:
+            raise OperationNotPermited, "Cannot pay this selling because it is closed"
+        
+        assert self.is_opened == True, "Selling should be opened to be paid"
 
+        payment = SellingPayment(self, amount=amount)
+        self.amount_paid += amount
+        if not self.is_paid and (self.amount_paid >= self.amount or abs(self.amount_paid - self.amount) < FLOAT_PRECISION):
+            self.is_paid = True
+        
+        self.save()
+        
+    
     def reopen(self):
         if self.is_opened:
-            return
+            raise OperationNotPermited, "Cannot reopen this selling because it is already opened"
 
         assert self.is_opened == False, "Selling should be closed to be reopened"
         assert self.outcoming_time is not None, "Outcoming time should be setted on a closed selling"
@@ -581,7 +595,10 @@ class SellingPayment(models.Model):
         verbose_name=_("is credit"),
         default=False
     )
-
+    date = models.DateTimeField(
+        verbose_name=_("payment date"),
+        default=datetime.now
+    )
     def __unicode__(self):
         return u'Selling %s |amount %f' % (self.selling.id, self.amount)
 

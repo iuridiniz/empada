@@ -180,6 +180,7 @@ class SalesBuyProductsTest(unittest.TestCase):
         
     def testSaleProductOnClosedSelling(self):
         s = Selling.objects.create()
+        self.ids.append(s.id)
         s.close()
         
         self.assertTrue(s.product.count() == 0)        
@@ -187,4 +188,83 @@ class SalesBuyProductsTest(unittest.TestCase):
 
         self.assertTrue(s.product.count() == 0)
         
+    
+
+class SalesPayTest(unittest.TestCase):
+    def setUp(self):
+        self.ids = []
+        un1 = Unit.objects.create(name=u"Peça")
+        un2 = Unit.objects.create(name="Kg", type='F')
+        # create 2 simple products
+        self.p1 = Product.objects.create(name="Coxinha de frango", price=float(1.00), unit=un1)
+        # create 1 fractionary product
+        self.p2 = Product.objects.create(name="Bolo de chocolate", price=float(12.00), unit=un2)
+        
+    def tearDown(self):
+        self.p1.delete()
+        self.p2.delete()
+
+        for id in self.ids:
+            Selling.objects.get(id=id).delete()
+    
+    def testPayInTotally(self):
+        
+        s = Selling.objects.create()
+        self.ids.append(s.id)
+        s.addProduct(self.p1)
+        s.addProduct(self.p2)
+        
+        s.pay(amount=s.amount)
+        
+        self.assertTrue(s.is_paid == True)
+        self.assertAlmostEqual(s.amount_paid, s.amount)
+        
+        s.close()
+        
+    def testPayMostPart(self):
+        
+        s = Selling.objects.create()
+        self.ids.append(s.id)
+        s.addProduct(self.p1)
+        s.addProduct(self.p2)
+        
+        s.pay(amount=s.amount * 0.80)
+        
+        self.assertTrue(s.is_paid == False)
+        self.assertAlmostEqual(s.amount_paid, s.amount * 0.80)
+        
+        s.close()
+        
+    def testTwoPayInTotally(self):
+        
+        s = Selling.objects.create()
+        self.ids.append(s.id)
+        s.addProduct(self.p1)
+        s.addProduct(self.p2)
+        
+        s.pay(amount=s.amount * 0.60)
+        self.assertAlmostEqual(s.amount_paid, s.amount * 0.60)
+        self.assertTrue(s.is_paid == False)
+        
+        s.pay(amount=s.amount * 0.40)
+        self.assertTrue(s.is_paid == True)
+        self.assertAlmostEqual(s.amount_paid, s.amount)
+        
+        s.close()
+    
+    def testTwoPayMoreThanTotally(self):
+        s = Selling.objects.create()
+        self.ids.append(s.id)
+        s.addProduct(self.p1)
+        s.addProduct(self.p2)
+        
+        s.pay(amount=s.amount * 0.60)
+        self.assertAlmostEqual(s.amount_paid, s.amount * 0.60)
+        self.assertTrue(s.is_paid == False)
+        
+        s.pay(amount=s.amount * 0.60)
+        self.assertTrue(s.is_paid == True)
+        self.assertNotAlmostEqual(s.amount_paid, s.amount)
+        
+        s.close()
         
