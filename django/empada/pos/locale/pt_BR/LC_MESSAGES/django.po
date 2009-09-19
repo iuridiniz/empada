@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EMPADA 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-10 21:07-0300\n"
-"PO-Revision-Date: 2009-09-19 00:00-0300\n"
+"POT-Creation-Date: 2009-09-19 13:15-0300\n"
+"PO-Revision-Date: 2009-09-19 13:19-0300\n"
 "Last-Translator: Iuri Diniz <iuridiniz@gmail.com>\n"
 "Language-Team: IGDIUM\n"
 "MIME-Version: 1.0\n"
@@ -18,280 +18,319 @@ msgstr ""
 "X-Poedit-Country: BRAZIL\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: admin.py:9
-#: admin.py:26
-#: admin.py:40
+#: admin.py:13
+#: admin.py:30
+#: admin.py:52
 msgid "Basic information"
 msgstr "Informação básica"
 
-#: admin.py:11
-#: admin.py:28
-#: admin.py:42
+#: admin.py:15
+#: admin.py:32
+#: admin.py:54
 msgid "Extra information"
 msgstr "Informação extra"
 
-#: admin.py:13
-#: admin.py:30
-#: admin.py:44
+#: admin.py:17
+#: admin.py:34
+#: admin.py:56
 msgid "Financial information"
 msgstr "Informação financeira"
 
-#: admin.py:15
+#: admin.py:19
 msgid "Address information"
 msgstr "Informação de endereçamento"
 
-#: models.py:15
-#: models.py:125
-#: models.py:144
-#: models.py:191
-#: models.py:212
+#: models.py:17
+#: models.py:37
+#: models.py:147
+#: models.py:167
+#: models.py:218
+#: models.py:237
 msgid "name"
 msgstr "nome"
 
 #: models.py:20
-msgid "document ID"
-msgstr "número do documento"
+msgid "Integer"
+msgstr "Inteiro"
 
-#: models.py:25
-msgid "address"
-msgstr "endereço"
+#: models.py:21
+msgid "Fraction"
+msgstr "Fração"
 
-#: models.py:30
-msgid "city"
-msgstr "cidade"
-
-#: models.py:35
-msgid "state"
-msgstr "estado"
-
-#: models.py:40
-msgid "email"
-msgstr "email"
-
-#: models.py:45
-msgid "telephone"
-msgstr "telefone"
-
-#: models.py:50
-msgid "maximum credit"
-msgstr "crédito máximo"
-
-#: models.py:57
-#: models.py:66
-#: models.py:89
-#: models.py:404
-msgid "client"
-msgstr "cliente"
-
-#: models.py:58
-msgid "clients"
-msgstr "clientes"
-
-#: models.py:70
-#: models.py:171
-#: models.py:283
-msgid "description"
-msgstr "descrição"
-
-#: models.py:74
-#: models.py:95
-#: models.py:174
-#: models.py:286
-msgid "date"
-msgstr "data"
-
-#: models.py:81
-msgid "client modification history"
-msgstr "histórico de modificação de clientes"
-
-#: models.py:82
-msgid "client modification histories"
-msgstr "históricos de modificação de clientes"
-
-#: models.py:92
-#: models.py:407
-msgid "amount"
-msgstr "quantia"
-
-#: models.py:98
-msgid "is a payment"
-msgstr "é um pagamento"
-
-#: models.py:104
-#: models.py:332
-#: models.py:344
-#: models.py:398
-msgid "selling"
-msgstr "venda"
-
-#: models.py:115
-msgid "client credit"
-msgstr "crédito de cliente"
-
-#: models.py:116
-msgid "client credits"
-msgstr "crédito de clientes"
-
-#: models.py:132
-msgid "product type"
-msgstr "tipo de produto"
-
-#: models.py:133
-msgid "product types"
-msgstr "tipos de produto"
-
-#: models.py:140
-#: models.py:196
-#: models.py:264
+#: models.py:27
+#: models.py:162
+#: models.py:252
+#: models.py:295
 msgid "type"
 msgstr "tipo"
 
-#: models.py:147
-#: models.py:221
-#: models.py:252
+#: models.py:42
+msgid "document ID"
+msgstr "número do documento"
+
+#: models.py:47
+msgid "address"
+msgstr "endereço"
+
+#: models.py:52
+msgid "city"
+msgstr "cidade"
+
+#: models.py:57
+msgid "state"
+msgstr "estado"
+
+#: models.py:62
+msgid "email"
+msgstr "email"
+
+#: models.py:67
+msgid "telephone"
+msgstr "telefone"
+
+#: models.py:72
+msgid "maximum credit"
+msgstr "crédito máximo"
+
+#: models.py:79
+#: models.py:88
+#: models.py:111
+#: models.py:565
+msgid "client"
+msgstr "cliente"
+
+#: models.py:80
+msgid "clients"
+msgstr "clientes"
+
+#: models.py:92
+#: models.py:198
+#: models.py:315
+#: models.py:339
+msgid "description"
+msgstr "descrição"
+
+#: models.py:96
+#: models.py:117
+#: models.py:201
+#: models.py:318
+#: models.py:342
+msgid "date"
+msgstr "data"
+
+#: models.py:103
+msgid "client modification history"
+msgstr "histórico de modificação de clientes"
+
+#: models.py:104
+msgid "client modification histories"
+msgstr "históricos de modificação de clientes"
+
+#: models.py:114
+#: models.py:568
+msgid "amount"
+msgstr "quantia"
+
+#: models.py:120
+msgid "is a payment"
+msgstr "é um pagamento"
+
+#: models.py:126
+#: models.py:335
+#: models.py:493
+#: models.py:505
+#: models.py:559
+msgid "selling"
+msgstr "venda"
+
+#: models.py:137
+msgid "client credit"
+msgstr "crédito de cliente"
+
+#: models.py:138
+msgid "client credits"
+msgstr "crédito de clientes"
+
+#: models.py:154
+msgid "product type"
+msgstr "tipo de produto"
+
+#: models.py:155
+msgid "product types"
+msgstr "tipos de produto"
+
+#: models.py:171
+#: models.py:222
+msgid "unit"
+msgstr "unidade"
+
+#: models.py:174
+#: models.py:246
+#: models.py:283
 msgid "price"
 msgstr "preço"
 
-#: models.py:150
-#: models.py:216
+#: models.py:177
+#: models.py:241
 msgid "is active"
 msgstr "está ativo"
 
-#: models.py:158
-#: models.py:167
-#: models.py:243
-#: models.py:304
-#: models.py:340
+#: models.py:185
+#: models.py:194
+#: models.py:274
+#: models.py:359
+#: models.py:501
 msgid "product"
 msgstr "produto"
 
-#: models.py:159
+#: models.py:186
 msgid "products"
 msgstr "produtos"
 
-#: models.py:181
+#: models.py:208
 msgid "product modification history"
 msgstr "histórico de modificação de produtos"
 
-#: models.py:182
+#: models.py:209
 msgid "product modification histories"
 msgstr "históricos de modificação de produtos"
 
-#: models.py:203
+#: models.py:228
 msgid "ingredient type"
 msgstr "tipo de ingrediente"
 
-#: models.py:204
+#: models.py:229
 msgid "ingredient types"
 msgstr "tipos de ingrediente"
 
-#: models.py:229
-#: models.py:248
+#: models.py:260
 #: models.py:279
-#: models.py:375
+#: models.py:311
+#: models.py:536
 msgid "ingredient"
 msgstr "Ingrediente"
 
-#: models.py:230
+#: models.py:261
 msgid "ingredients"
 msgstr "Ingredientes"
 
-#: models.py:236
+#: models.py:267
 msgid "Fixed"
 msgstr "Fixo"
 
-#: models.py:237
+#: models.py:268
 msgid "Optional"
 msgstr "Opcional"
 
-#: models.py:238
+#: models.py:269
 msgid "Included"
 msgstr "Incluso"
 
-#: models.py:257
-#: models.py:352
+#: models.py:288
+#: models.py:513
+#, fuzzy
 msgid "quantity"
 msgstr "quantidade"
 
-#: models.py:271
+#: models.py:303
 msgid "ingredient of a product"
 msgstr "Ingrediente de um produto"
 
-#: models.py:272
+#: models.py:304
 msgid "ingredients of a product"
 msgstr "ingredientes de um produto"
 
-#: models.py:293
+#: models.py:325
 msgid "ingredient modification history"
 msgstr "histórico de modificação de ingrediente"
 
-#: models.py:294
+#: models.py:326
 msgid "ingredient modification histories"
 msgstr "históricos de modificação de ingrediente"
 
-#: models.py:308
+#: models.py:350
+msgid "selling modification history"
+msgstr "histórico de modificação de venda"
+
+#: models.py:351
+msgid "selling modification histories"
+msgstr "históricos de modificação de venda"
+
+#: models.py:363
 msgid "ticket"
 msgstr "ficha"
 
-#: models.py:312
+#: models.py:369
 msgid "is paid"
 msgstr "está pago"
 
-#: models.py:316
+#: models.py:374
 msgid "amount paid"
 msgstr "quantia paga"
 
-#: models.py:320
+#: models.py:379
 msgid "incoming time"
 msgstr "hora de entrada"
 
-#: models.py:324
+#: models.py:384
 msgid "outcoming time"
 msgstr "hora de saída"
 
-#: models.py:333
+#: models.py:390
+msgid "is opened"
+msgstr "está aberto"
+
+#: models.py:460
+msgid "Someone closed this selling"
+msgstr "Alguém encerrou esta venda"
+
+#: models.py:482
+msgid "Someone reopened this selling"
+msgstr "Alguém reabriu esta venda"
+
+#: models.py:494
 msgid "sellings"
 msgstr "vendas"
 
-#: models.py:349
-msgid "special instuctions"
+#: models.py:510
+msgid "special instructions"
 msgstr "instruções especiais"
 
-#: models.py:356
-#: models.py:384
+#: models.py:517
+#: models.py:545
 msgid "selling unit price"
 msgstr "preço por unidade vendida"
 
-#: models.py:360
+#: models.py:521
 msgid "selling date"
 msgstr "data da venda"
 
-#: models.py:367
-#: models.py:380
+#: models.py:528
+#: models.py:541
 msgid "selling product"
 msgstr "produto vendido"
 
-#: models.py:368
+#: models.py:529
 msgid "selling products"
 msgstr "produtos vendidos"
 
-#: models.py:389
+#: models.py:550
 msgid "selling product ingredient"
 msgstr "ingrediente de produto vendido"
 
-#: models.py:390
+#: models.py:551
 msgid "selling product ingredients"
 msgstr "ingredientes de produto vendido"
 
-#: models.py:410
+#: models.py:571
 msgid "is credit"
 msgstr "é a crédito"
 
-#: models.py:418
+#: models.py:579
 msgid "selling payment"
 msgstr "pagamento de uma venda"
 
-#: models.py:419
+#: models.py:580
 msgid "selling payments"
 msgstr "pagamentos de uma venda"
 

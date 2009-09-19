@@ -1,29 +1,41 @@
 from django.db import models
-from django.core.exceptions import ValidationError
+
 
 from datetime import datetime
 
-from django.utils.translation import ugettext_lazy as _L
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext
+
+
+from exceptions import DuplicateOpenedTicket, OperationNotPermited
 
 # Create your models here.
 
 #####################################################################
 class Unit(models.Model):
     name = models.CharField(max_length=30,
-        verbose_name=_L("name")
+        verbose_name=_("name")
     )
     TYPE_CHOICES = (
-        ('I', _L('Integer')),
-        ('F', _L('Fraction')),
+        ('I', _('Integer')),
+        ('F', _('Fraction')),
     )
 
     type = models.CharField(
         max_length=1,
         choices=TYPE_CHOICES, 
-        verbose_name=_L('type'),
+        verbose_name=_('type'),
         default='I'
     )
+
+    def __unicode__(self):
+        return u'%s' % self.name
+    
+    class Meta:
+        verbose_name = _('unit')
+        verbose_name_plural = _('units')
+        ordering = ['type', 'name']
+        #abstract = True
 
 
 #####################################################################
@@ -31,50 +43,50 @@ class Client(models.Model):
     DEFAULT_CREDIT=float(25.00)
     name = models.CharField(
         max_length=30, 
-        verbose_name=_L('name')
+        verbose_name=_('name')
     )
     document_id = models.SlugField(
         max_length=30, 
         unique=True,
-        verbose_name=_L('document ID')
+        verbose_name=_('document ID')
         )
     address = models.CharField(
         max_length=50,
         blank=True,
-        verbose_name=_L('address')
+        verbose_name=_('address')
     )
     city = models.CharField(
         max_length=60, 
         blank=True,
-        verbose_name = _L('city')
+        verbose_name = _('city')
     )
     state = models.CharField(
         max_length=30, 
         blank=True,
-        verbose_name = _L('state')
+        verbose_name = _('state')
     )
     email = models.EmailField(
         max_length=40,
         blank=True,
-        verbose_name = _L('email')
+        verbose_name = _('email')
     )
     telephone = models.SlugField(
         max_length=40,
         blank=True,
-        verbose_name = _L('telephone')
+        verbose_name = _('telephone')
     )
     maximum_credit = models.FloatField(
         blank=True,
         default=DEFAULT_CREDIT,
-        verbose_name=_L('maximum credit')
+        verbose_name=_('maximum credit')
     )
 
     def __unicode__(self):
         return u'%s' % self.name
     
     class Meta:
-        verbose_name = _L('client')
-        verbose_name_plural = _L('clients')
+        verbose_name = _('client')
+        verbose_name_plural = _('clients')
         ordering = ['name']
         #abstract = True
 
@@ -82,45 +94,45 @@ class Client(models.Model):
 class ClientHistory(models.Model):
     client = models.ForeignKey(
         Client, 
-        verbose_name = _L('client')
+        verbose_name = _('client')
     )
     description = models.CharField(
         max_length=120, 
-        verbose_name = _L('description')
+        verbose_name = _('description')
     )
     date = models.DateTimeField(
         default=datetime.now, 
-        verbose_name = _L('date')
+        verbose_name = _('date')
     )
 
     def __unicode__(self):
         return u'%s' % self.date
 
     class Meta:
-        verbose_name = _L('client modification history')
-        verbose_name_plural = _L('client modification histories')
+        verbose_name = _('client modification history')
+        verbose_name_plural = _('client modification histories')
         ordering = ['client', '-date']
         #abstract = True
 
 class ClientCredit(models.Model):
     client = models.ForeignKey(
         Client, 
-        verbose_name = _L('client')
+        verbose_name = _('client')
     )
     amount = models.FloatField(
-        verbose_name = _L('amount')
+        verbose_name = _('amount')
     )
     date = models.DateTimeField(
-        verbose_name = _L('date')
+        verbose_name = _('date')
     )
     is_payment = models.BooleanField(
-        verbose_name = _L('is a payment')
+        verbose_name = _('is a payment')
     )
     selling = models.ForeignKey(
         'Selling', 
         blank=True,
         null=True,
-        verbose_name = _L('selling')
+        verbose_name = _('selling')
     )
 
     def __unicode__(self):
@@ -131,8 +143,8 @@ class ClientCredit(models.Model):
         return u'%s done on %s by %s' % (type, self.date, self.client.name)
     
     class Meta:
-        verbose_name = _L('client credit')
-        verbose_name_plural = _L('client credits')
+        verbose_name = _('client credit')
+        verbose_name_plural = _('client credits')
         ordering = ['client', '-date']
         #abstract = True
 
@@ -141,33 +153,37 @@ class ClientCredit(models.Model):
 class ProductType(models.Model):
     name = models.CharField(
         max_length=30,
-        verbose_name=_L('name')
+        verbose_name=_('name')
     )
 
     def __unicode__(self):
         return u'%s' % self.name
 
     class Meta:
-        verbose_name = _L('product type')
-        verbose_name_plural = _L('product types')
+        verbose_name = _('product type')
+        verbose_name_plural = _('product types')
         ordering = ['name']
         #abstract = True
 
 class Product(models.Model):
     type = models.ManyToManyField(
         ProductType,
-        verbose_name = _L('type'),
+        verbose_name = _('type'),
         blank=True
     )
     name = models.CharField(
         max_length=30,
-        verbose_name = _L('name')
+        verbose_name = _('name')
+    )
+    unit = models.ForeignKey(
+        Unit,
+        verbose_name = _("unit")
     )
     price = models.FloatField(
-        verbose_name = _L('price')
+        verbose_name = _('price')
     )
     is_active = models.BooleanField(
-        verbose_name = _L('is active'),
+        verbose_name = _('is active'),
         default=True
     )
     
@@ -175,8 +191,8 @@ class Product(models.Model):
         return u'%s' % self.name
 
     class Meta:
-        verbose_name = _L('product')
-        verbose_name_plural = _L('products')
+        verbose_name = _('product')
+        verbose_name_plural = _('products')
         ordering = ['name', 'price', 'is_active']
         #abstract = True
 
@@ -184,22 +200,22 @@ class Product(models.Model):
 class ProductHistory(models.Model):
     product = models.ForeignKey(
         Product, 
-        verbose_name = _L('product')
+        verbose_name = _('product')
     )
     description = models.CharField(
         max_length=30, 
-        verbose_name=_L('description')
+        verbose_name=_('description')
     )
     date = models.DateTimeField(
-        verbose_name=_L('date')
+        verbose_name=_('date')
     )
 
     def __unicode__(self):
         return u'%s' % self.date
 
     class Meta:
-        verbose_name = _L('product modification history')
-        verbose_name_plural = _L('product modification histories')
+        verbose_name = _('product modification history')
+        verbose_name_plural = _('product modification histories')
         ordering = ['product', 'date']
         #abstract = True
 
@@ -208,15 +224,14 @@ class ProductHistory(models.Model):
 class IngredientType(models.Model):
     name = models.CharField(
         max_length=30,
-        verbose_name=_L('name')
+        verbose_name=_('name')
     )
-
     def __unicode__(self):
         return u'%s' % self.name
 
     class Meta:
-        verbose_name = _L('ingredient type')
-        verbose_name_plural = _L('ingredient types')
+        verbose_name = _('ingredient type')
+        verbose_name_plural = _('ingredient types')
         ordering = ['name']
         #abstract = True
    
@@ -224,22 +239,27 @@ class IngredientType(models.Model):
 class Ingredient(models.Model):
     name = models.CharField(
         max_length=30,
-        verbose_name = _L('name')
+        verbose_name = _('name')
+    )
+
+    unit = models.ForeignKey(
+        Unit,
+        verbose_name = _("unit")
     )
 
     is_active = models.BooleanField(
-        verbose_name = _L('is active'),
+        verbose_name = _('is active'),
         default=True
     )
 
     price = models.FloatField(
-        verbose_name = _L('price'),
+        verbose_name = _('price'),
         default=float(0.00)
     )
 
     type = models.ManyToManyField(
         IngredientType,
-        verbose_name = _L('type'), 
+        verbose_name = _('type'), 
         blank=True
     )
     
@@ -247,42 +267,42 @@ class Ingredient(models.Model):
         return u'%s' % self.name
 
     class Meta:
-        verbose_name = _L('ingredient')
-        verbose_name_plural = _L('ingredients')
+        verbose_name = _('ingredient')
+        verbose_name_plural = _('ingredients')
         ordering = ['name', 'is_active']
         #abstract = True
 
 class IngredientProduct(models.Model):
     TYPE_CHOICES = (
-        ('F', _L('Fixed')),
-        ('O', _L('Optional')),
-        ('I', _L('Included')),
+        ('F', _('Fixed')),
+        ('O', _('Optional')),
+        ('I', _('Included')),
     )
 
     product = models.ForeignKey(
         Product, 
-        verbose_name = _L('product')
+        verbose_name = _('product')
     )
 
     ingredient = models.ForeignKey(
         Ingredient, 
-        verbose_name = _L('ingredient')
+        verbose_name = _('ingredient')
     )
 
     price = models.FloatField(
-        verbose_name = _L('price'),
+        verbose_name = _('price'),
         default=float(0.00)
     )
 
     quantity = models.FloatField(
-        verbose_name = _L('quantity'),
+        verbose_name = _('quantity'),
         default=float(1.00)
     )
 
     type = models.CharField(
         max_length=1,
         choices=TYPE_CHOICES, 
-        verbose_name=_L('type'),
+        verbose_name=_('type'),
         default='F'
     )
 
@@ -290,30 +310,30 @@ class IngredientProduct(models.Model):
         return u'Product: %s, Ingredient: %s' % (self.product, self.ingredient,)
 
     class Meta:
-        verbose_name = _L('ingredient of a product')
-        verbose_name_plural = _L('ingredients of a product')
+        verbose_name = _('ingredient of a product')
+        verbose_name_plural = _('ingredients of a product')
         ordering = ['product', 'ingredient']
         #abstract = True
 
 class IngredientHistory(models.Model):
     ingredient = models.ForeignKey(
         Ingredient, 
-        verbose_name = _L('ingredient')
+        verbose_name = _('ingredient')
     )
     description = models.CharField(
         max_length=30, 
-        verbose_name=_L('description')
+        verbose_name=_('description')
     )
     date = models.DateTimeField(
-        verbose_name=_L('date')
+        verbose_name=_('date')
     )
 
     def __unicode__(self):
         return u'modification in %s on %s' % (self.ingredient, self.date,)
 
     class Meta:
-        verbose_name = _L('ingredient modification history')
-        verbose_name_plural = _L('ingredient modification histories')
+        verbose_name = _('ingredient modification history')
+        verbose_name_plural = _('ingredient modification histories')
         ordering = ['ingredient', 'date']
         #abstract = True
 
@@ -322,14 +342,14 @@ class IngredientHistory(models.Model):
 class SellingHistory(models.Model):
     selling = models.ForeignKey(
         'Selling', 
-        verbose_name = _L('selling')
+        verbose_name = _('selling')
     )
     description = models.CharField(
         max_length=30, 
-        verbose_name=_L('description')
+        verbose_name=_('description')
     )
     date = models.DateTimeField(
-        verbose_name=_L('date'),
+        verbose_name=_('date'),
         default=datetime.now
     )
 
@@ -337,8 +357,8 @@ class SellingHistory(models.Model):
         return u'Modification in [%s] on [%s]' % (self.selling, self.date,)
 
     class Meta:
-        verbose_name = _L('selling modification history')
-        verbose_name_plural = _L('selling modification histories')
+        verbose_name = _('selling modification history')
+        verbose_name_plural = _('selling modification histories')
         ordering = ['selling', 'date']
         #abstract = True
 
@@ -346,38 +366,38 @@ class Selling(models.Model):
     product = models.ManyToManyField(
         Product, 
         through='SellingProduct', 
-        verbose_name=_L('product')
+        verbose_name=_('product')
     )
 
     ticket = models.IntegerField(
-        verbose_name=_L('ticket'),
+        verbose_name=_('ticket'),
         blank=True,
         null=True
     )
 
     is_paid = models.BooleanField(
-        verbose_name=_L('is paid'),
+        verbose_name=_('is paid'),
         default=False
     )
 
     amount_paid = models.FloatField(
-        verbose_name=_L('amount paid'), 
+        verbose_name=_('amount paid'), 
         default=float(0.00)
     )
 
     incoming_time = models.DateTimeField(
-        verbose_name=_L('incoming time'),
+        verbose_name=_('incoming time'),
         default=datetime.now,
     )
 
     outcoming_time = models.DateTimeField(
-        verbose_name=_L('outcoming time'),
+        verbose_name=_('outcoming time'),
         blank=True,
         null=True,
     )
 
     is_opened = models.BooleanField(
-        verbose_name=_L('is opened'),
+        verbose_name=_('is opened'),
         default=True
     )
 
@@ -392,13 +412,22 @@ class Selling(models.Model):
     amount = property(__amount__)
 
     def addProduct(self, product, quantity=1, instructions="", price=None):
+        if self.is_closed:
+            raise OperationNotPermited, "Cannot add product to a closed selling"
         p = product.price
         if price:
             p = price
-        for i in range(0,quantity):
-            #self.product.add(product, instructions=instructions, selling_unit_price=p)
-            sp = SellingProduct(product=product, selling=self, instructions=instructions, selling_unit_price=p)
+        # Product with integer units
+        if product.unit.type == 'I':
+            for i in range(0,quantity):
+                #self.product.add(product, instructions=instructions, selling_unit_price=p)
+                sp = SellingProduct(product=product, selling=self, instructions=instructions, selling_unit_price=p)
+                sp.save()
+        # product with fractional units
+        else:
+            sp = SellingProduct(product=product, selling=self, instructions=instructions, selling_unit_price=p, quantity=quantity)
             sp.save()
+            
         
         
 
@@ -408,7 +437,7 @@ class Selling(models.Model):
             q = Selling.objects.filter(ticket=self.ticket, is_opened=True)
             assert q.count() <= 1, "System have tickets opened under same number: %d" % (self.ticket,) 
             if q.count() > 0 and q[0].id != self.id:
-                raise ValidationError, "System has a ticket already opened with ticket id %d" % (self.ticket,)
+                raise DuplicateOpenedTicket, "System has a ticket already opened with ticket id %d" % (self.ticket,)
         # call the real save method
         super(Selling, self).save(force_insert, force_update)
 
@@ -438,7 +467,7 @@ class Selling(models.Model):
         self.save()
         # TODO: write user to log
         # TODO: refactor this by implement a decoration
-        desc = _("Someone closed this selling")
+        desc = ugettext("Someone closed this selling")
         SellingHistory.objects.create(selling=self, description=desc)
         
 
@@ -453,14 +482,14 @@ class Selling(models.Model):
             q = Selling.objects.filter(ticket=self.ticket, is_opened=True)
             assert q.count() <= 1, "System have tickets opened under same number: %d" % (self.ticket,) 
             if q.count() > 0:
-                raise ValidationError, "System has a ticket already opened with ticket id %d" % (self.ticket,)
+                raise DuplicateOpenedTicket, "System has a ticket already opened with ticket id %d" % (self.ticket,)
 
         self.outcoming_time = None
         self.is_opened = True
         self.save()
         # TODO: write user to log
         # TODO: refactor this by implement a decoration
-        desc = _("Someone reopened this selling")
+        desc = ugettext("Someone reopened this selling")
         SellingHistory.objects.create(selling=self, description=desc)
 
 
@@ -471,65 +500,65 @@ class Selling(models.Model):
         return u'Selling [%d]|Ticket: [%s]' % (self.id, ticket_number)
 
     class Meta:
-        verbose_name = _L('selling')
-        verbose_name_plural = _L('sellings')
+        verbose_name = _('selling')
+        verbose_name_plural = _('sellings')
         ordering = ['is_paid','incoming_time', 'ticket']
         #abstract = True
 
 class SellingProduct(models.Model):
     product = models.ForeignKey(
         Product,
-        verbose_name=_L('product'),
+        verbose_name=_('product'),
     )
     selling = models.ForeignKey(
         Selling,
-        verbose_name=_L('selling')
+        verbose_name=_('selling')
     )
     instructions = models.TextField(
         max_length=256, 
         blank=True,
-        verbose_name=_L('special instuctions')
+        verbose_name=_('special instructions')
     )
     quantity = models.FloatField(
-        verbose_name=_L('quantity'),
+        verbose_name=_('quantity'),
         default=float(1.0)
     )
     selling_unit_price = models.FloatField(
-        verbose_name=_L('selling unit price'),
+        verbose_name=_('selling unit price'),
         default = float(0.00),
     )
     date = models.DateTimeField(
-        verbose_name=_L('selling date'),
+        verbose_name=_('selling date'),
         default = datetime.now
     )
     def __unicode__(self):
         return u'Selling id %u of product %s' % (self.selling.id, self.product.name)
 
     class Meta:
-        verbose_name = _L('selling product')
-        verbose_name_plural = _L('selling products')
+        verbose_name = _('selling product')
+        verbose_name_plural = _('selling products')
         ordering = ['selling', 'date', 'product']
         #abstract = True
 
 class SellingProductIngredient(models.Model):
     ingredient_product = models.ForeignKey(
         IngredientProduct,
-        verbose_name=_L('ingredient'),
+        verbose_name=_('ingredient'),
     )
 
     selling_product = models.ForeignKey(
         SellingProduct,
-        verbose_name=_L('selling product')
+        verbose_name=_('selling product')
     )
 
     selling_price = models.FloatField(
-        verbose_name=_L('selling unit price'),
+        verbose_name=_('selling unit price'),
         default = float(0.00),
     )
     
     class Meta:
-        verbose_name = _L('selling product ingredient')
-        verbose_name_plural = _L('selling product ingredients')
+        verbose_name = _('selling product ingredient')
+        verbose_name_plural = _('selling product ingredients')
         ordering = ['selling_product', 'ingredient_product']
         #abstract = True
 
@@ -537,19 +566,19 @@ class SellingProductIngredient(models.Model):
 class SellingPayment(models.Model):
     selling = models.ForeignKey(
         Selling,
-        verbose_name=_L("selling"),
+        verbose_name=_("selling"),
     )
     client = models.ForeignKey(
         Client, 
         blank=True,
         null=True,
-        verbose_name=_L("client"),
+        verbose_name=_("client"),
     )
     amount = models.FloatField(
-        verbose_name=_L("amount")
+        verbose_name=_("amount")
     )
     is_credit = models.BooleanField(
-        verbose_name=_L("is credit"),
+        verbose_name=_("is credit"),
         default=False
     )
 
@@ -557,8 +586,8 @@ class SellingPayment(models.Model):
         return u'Selling %s |amount %f' % (self.selling.id, self.amount)
 
     class Meta:
-        verbose_name = _L('selling payment')
-        verbose_name_plural = _L('selling payments')
+        verbose_name = _('selling payment')
+        verbose_name_plural = _('selling payments')
         ordering = ['selling', 'client']
         #abstract = True
 

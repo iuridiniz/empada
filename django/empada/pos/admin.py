@@ -28,7 +28,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_display_links = list_display
     fieldsets = (
         (_("Basic information"),
-            { 'fields': ('name', 'is_active')}),
+            { 'fields': ('name', 'unit', 'is_active')}),
         (_("Extra information"), 
             { 'fields': ('type',), 'classes': ['collapse']}),
         (_("Financial information"), 
@@ -44,13 +44,18 @@ class ProductTypeAdmin(admin.ModelAdmin):
     list_display_links = list_display
     search_fields = ['name', 'id']
 
+class UnitAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name', 'type']
+    list_display_links = list_display
+    search_fields = ['name', 'id']
+
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'price']
     list_display_links = list_display
     fieldsets = (
         (_("Basic information"),
-            { 'fields': ('name', 'is_active')}),
+            { 'fields': ('name', 'unit', 'is_active')}),
         (_("Extra information"), 
             { 'fields': ('type',), 'classes': ['collapse']}),
         (_("Financial information"), 
@@ -65,6 +70,8 @@ class IngredientTypeAdmin(admin.ModelAdmin):
     list_display_links = list_display
     search_fields = ['name', 'id']
 
+
+admin.site.register(Unit, UnitAdmin)
 
 admin.site.register(Client, ClientAdmin)
 #admin.site.register(ClientCredit)
