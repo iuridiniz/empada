@@ -22,8 +22,10 @@
                     <property name="width_request">199</property>
                     <property name="height_request">33</property>
                     <property name="visible">True</property>
-                    <property name="label">&lt;span size='12000'&gt;Opened Tickets: 031&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
+                    <property name="label">Opened Sellings: 031</property>
+                    <attributes>
+                      <attribute name="size" value="12000"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="x">120</property>
@@ -35,8 +37,10 @@
                     <property name="width_request">239</property>
                     <property name="height_request">47</property>
                     <property name="visible">True</property>
-                    <property name="label">&lt;span size='12000'&gt;Today Closed Tickets: 311&lt;/span&gt;</property>
-                    <property name="use_markup">True</property>
+                    <property name="label">Today Closed Sellings: 311</property>
+                    <attributes>
+                      <attribute name="size" value="12000"/>
+                    </attributes>
                   </object>
                   <packing>
                     <property name="x">120</property>
@@ -76,7 +80,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBoxEntry" id="combo_ticketlist">
+                  <object class="GtkComboBoxEntry" id="combo_selling_list">
                     <property name="visible">True</property>
                   </object>
                   <packing>
@@ -84,7 +88,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="button_ticketlist">
+                  <object class="GtkButton" id="button_selling_list">
                     <property name="label" translatable="yes">OK</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -221,7 +225,7 @@
       </object>
     </child>
   </object>
-  <object class="GtkWindow" id="window_ticket">
+  <object class="GtkWindow" id="window_selling">
     <property name="title">Ticket 71</property>
     <child>
       <object class="GtkHBox" id="hbox1">

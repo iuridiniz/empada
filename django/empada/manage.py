@@ -1,4 +1,13 @@
 #!/usr/bin/python
+import sys
+import os.path
+
+#sys.path += (os.path.realpath(os.path.sep.join(["..", "..", "3rd"])),)
+
+BASEDIR=os.path.realpath(os.path.dirname(__file__))
+sys.path += (os.path.sep.join([BASEDIR, "..", "..", "3rd"]),)
+
+
 from django.core.management import execute_manager
 try:
     import settings # Assumed to be in the same directory.

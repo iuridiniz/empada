@@ -1,14 +1,10 @@
-from django.db import models
-
-
 from datetime import datetime
 
+from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext
 
-
 from exceptions import DuplicateOpenedTicket, OperationNotPermited
-
 
 FLOAT_PRECISION=0.0000001
 # Create your models here.
@@ -429,8 +425,6 @@ class Selling(models.Model):
             sp = SellingProduct(product=product, selling=self, instructions=instructions, selling_unit_price=p, quantity=quantity)
             sp.save()
             
-        
-        
 
     def save(self, force_insert=False, force_update=False):
         #verify if TICKET is already opened.
@@ -471,19 +465,26 @@ class Selling(models.Model):
         desc = ugettext("Someone closed this selling")
         SellingHistory.objects.create(selling=self, description=desc)
         
+    close.alters_data = True
+
     def pay(self,amount=0.00):
         if self.is_closed:
             raise OperationNotPermited, "Cannot pay this selling because it is closed"
-        
+        if amount < 0:
+            raise OperationNotPermited, "Cannot accept negative payments"
+
+        # Programming errors
+        assert amount > 0, "Amount to pay must be greater than 0"
         assert self.is_opened == True, "Selling should be opened to be paid"
 
-        payment = SellingPayment(self, amount=amount)
+        payment = SellingPayment.objects.create(selling=self, amount=amount)
         self.amount_paid += amount
         if not self.is_paid and (self.amount_paid >= self.amount or abs(self.amount_paid - self.amount) < FLOAT_PRECISION):
             self.is_paid = True
         
         self.save()
-        
+
+    pay.alters_data = True    
     
     def reopen(self):
         if self.is_opened:
@@ -505,6 +506,8 @@ class Selling(models.Model):
         # TODO: refactor this by implement a decoration
         desc = ugettext("Someone reopened this selling")
         SellingHistory.objects.create(selling=self, description=desc)
+
+    reopen.alters_data = True
 
 
     def __unicode__(self):

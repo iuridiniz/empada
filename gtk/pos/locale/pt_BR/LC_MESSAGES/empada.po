@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EMPADA 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-09-12 22:58-0300\n"
-"PO-Revision-Date: 2009-09-13 00:54-0300\n"
+"POT-Creation-Date: 2009-09-28 10:56-0300\n"
+"PO-Revision-Date: 2009-09-28 10:57-0300\n"
 "Last-Translator: Iuri Diniz <iuridiniz@gmail.com>\n"
 "Language-Team: Brazilian Portuguese\n"
 "MIME-Version: 1.0\n"
@@ -40,11 +40,15 @@ msgid "button"
 msgstr "botão"
 
 #: pos.glade.h:6
-#: pos.py:70
 msgid "label"
 msgstr "etiqueta"
 
-#: pos.py:69
-msgid "Hello"
-msgstr "Oi"
+#: pos.py:76
+#: pos.py:77
+#, python-format
+msgid "Opened sellings: %03d"
+msgstr "Vendas abertas: %03d"
+
+#~ msgid "Hello"
+#~ msgstr "Oi"
 

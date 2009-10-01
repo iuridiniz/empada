@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+from settings import GLADE_FILE, BASE_URL
 
 import pygtk
 pygtk.require("2.0")
@@ -13,9 +14,8 @@ import gettext
 from gettext import gettext as _
 
 
-GLADE_FILE="pos.glade"
-CLOCK_SIZE="24000" # 24 pts * 1000
-
+import urllib2
+import json
 
 
 #class Token:
@@ -42,7 +42,7 @@ class Pos:
         self.builder.add_from_file(GLADE_FILE)
         self.__setup_clock__()
         self.__setup_window__()
-        self.__setup_tokens__()
+        self.__setup_sellings__()
 
     def __setup_clock__(self):
         label_clock = self.builder.get_object("label_clock")
@@ -53,14 +53,36 @@ class Pos:
         self.window = self.builder.get_object("window_pos")
         self.window.connect("destroy", gtk.main_quit)
 
-    def __setup_tokens__(self):
-        b = self.builder.get_object("button_ticketlist")
-        w = self.builder.get_object("window_ticket")
+    def __setup_sellings__(self):
+        b = self.builder.get_object("button_selling_list")
+        w = self.builder.get_object("window_selling")
+
+        self.update_sellings()
+
+        self.gsource_id_update_sellings = gobject.timeout_add(2000, self.update_sellings)
         b.connect("clicked", lambda x: w.show())
 
-    def update_clock(self, label_clock):
+    def update_sellings(self):
+        #print BASE_URL + "Selling/"
+        req = urllib2.Request(BASE_URL + "Selling/is_opened/")
+        try:
+            response = urllib2.urlopen(req)
+        except urllib2.URLError:
+            sellings = []
+        else:
+            json_data = response.read()
+            sellings = json.loads(json_data)
+
+        label_opened = self.builder.get_object("label_opened")
+        label_opened.set_label(_("Opened sellings: %03d") % len(sellings))
+        print _("Opened sellings: %03d") % len(sellings)
+        return True
+        
+    def update_clock(self, label_clock=None):
+        if label_clock is None:
+            label_clock = self.builder.get_object("label_clock")
         now = datetime.now()
-        label_clock.set_label("<span size='%s'>%02d:%02d:%02d</span>" % (CLOCK_SIZE, now.hour, now.minute, now.second))
+        label_clock.set_label("%02d:%02d:%02d" % (now.hour, now.minute, now.second))
         #label_clock.set_label("%02d:%02d:%02d" % (now.hour, now.minute, now.second))
         return True
     

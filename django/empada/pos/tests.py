@@ -1,15 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import unittest
+from django.test import TestCase
+#import unittest
 
 from exceptions import OperationNotPermited, DuplicateOpenedTicket
 
-from empada.pos.models import Selling, Product, SellingProduct, Unit
+from empada.pos.models import Selling, Product, SellingProduct, Unit, SellingPayment
 
 from datetime import datetime
 
-class SalesOpenCloseTest(unittest.TestCase):
+class SalesOpenCloseTest(TestCase):
     TICKET=31
     def setUp(self):
         self.ids = []
@@ -67,7 +68,7 @@ class SalesOpenCloseTest(unittest.TestCase):
         self.assertTrue(s.outcoming_time > old_outcoming_time)
         self.assertTrue(s.outcoming_time < datetime.now())
 
-class SalesDuplicateTicketTest(unittest.TestCase):
+class SalesDuplicateTicketTest(TestCase):
     TICKET=21
 
     def setUp(self):
@@ -109,7 +110,7 @@ class SalesDuplicateTicketTest(unittest.TestCase):
         for id in self.ids:
             Selling.objects.get(id=id).delete()
 
-class SalesBuyProductsTest(unittest.TestCase):
+class SalesBuyProductsTest(TestCase):
     def setUp(self):
         un1 = Unit.objects.create(name=u"Peça")
         un2 = Unit.objects.create(name="Kg", type='F')
@@ -188,9 +189,8 @@ class SalesBuyProductsTest(unittest.TestCase):
 
         self.assertTrue(s.product.count() == 0)
         
-    
 
-class SalesPayTest(unittest.TestCase):
+class SalesPayTest(TestCase):
     def setUp(self):
         self.ids = []
         un1 = Unit.objects.create(name=u"Peça")
@@ -214,7 +214,10 @@ class SalesPayTest(unittest.TestCase):
         s.addProduct(self.p1)
         s.addProduct(self.p2)
         
+        self.assertEqual(SellingPayment.objects.filter(selling=s.id).count(), 0) 
         s.pay(amount=s.amount)
+        
+        self.assertEqual(SellingPayment.objects.filter(selling=s.id).count(), 1) 
         
         self.assertTrue(s.is_paid == True)
         self.assertAlmostEqual(s.amount_paid, s.amount)
@@ -242,11 +245,14 @@ class SalesPayTest(unittest.TestCase):
         s.addProduct(self.p1)
         s.addProduct(self.p2)
         
+        self.assertEqual(SellingPayment.objects.filter(selling=s.id).count(), 0) 
         s.pay(amount=s.amount * 0.60)
+        self.assertEqual(SellingPayment.objects.filter(selling=s.id).count(), 1) 
         self.assertAlmostEqual(s.amount_paid, s.amount * 0.60)
         self.assertTrue(s.is_paid == False)
         
         s.pay(amount=s.amount * 0.40)
+        self.assertEqual(SellingPayment.objects.filter(selling=s.id).count(), 2) 
         self.assertTrue(s.is_paid == True)
         self.assertAlmostEqual(s.amount_paid, s.amount)
         
@@ -267,4 +273,103 @@ class SalesPayTest(unittest.TestCase):
         self.assertNotAlmostEqual(s.amount_paid, s.amount)
         
         s.close()
+
+    def testPayNegative(self):
+        s = Selling.objects.create()
+        self.ids.append(s.id)
+        s.addProduct(self.p1)
+        s.addProduct(self.p2)
+
+        self.assertRaises(OperationNotPermited, s.pay, -30)
+        s.close()
         
+class RestTest(TestCase):
+
+    BASE_URL = '/pos/json/'
+    fixtures = ['testdata.json']
+
+    def setUp(self):
+        self.last_product = Product.objects.order_by('-id')[0]
+        self.first_product = Product.objects.order_by('id')[0]
+        self.opened_selling = Selling.objects.filter(is_opened=True)[0]
+        self.closed_selling = Selling.objects.filter(is_opened=False)[0]
+
+    def tearDown(self):
+        pass
+
+    def testUrlListSellings(self):
+        url = RestTest.BASE_URL + 'Selling/'
+
+        response = self.client.get(url)
+        
+        self.failUnlessEqual(response.status_code, 200)
+        self.failIfEqual(response.content.find('"pos.selling"'), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.opened_selling.id,)), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.closed_selling.id,)), -1)
+
+    def testUrlListProducts(self):
+        url = RestTest.BASE_URL + 'Product/'
+
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        self.failIfEqual(response.content.find('"pos.product"'), -1)
+        self.failIfEqual(response.content.find('"name": "%s"' % (self.first_product.name,)), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.first_product.id,)), -1)
+
+        self.failIfEqual(response.content.find('"name": "%s"' % (self.last_product.name,)), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.last_product.id,)), -1)
+
+    def testUrlGetProduct(self):
+        url = RestTest.BASE_URL + 'Product/%d' % (self.first_product.id,)
+
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        self.failIfEqual(response.content.find('"pos.product"'), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.first_product.id,)), -1)
+        self.failIfEqual(response.content.find('"name": "%s"' % (self.first_product.name,)), -1)
+    
+        # test for error
+        self.failUnlessEqual(response.content.find('"pk": %d' % (self.last_product.id,)), -1)
+
+    def testUrlListOpenedSellings(self):
+        url = RestTest.BASE_URL + 'Selling/is_opened/'
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        self.failIfEqual(response.content.find('"pos.selling"'), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.opened_selling.id,)), -1)
+        self.failUnlessEqual(response.content.find('"pk": %d' % (self.closed_selling.id,)), -1)
+
+
+
+    def testUrlGetOpenedSelling(self):
+        url = RestTest.BASE_URL + 'Selling/is_opened/%d' % (self.opened_selling.id,)
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        self.failIfEqual(response.content.find('"pos.selling"'), -1)
+        self.failIfEqual(response.content.find('"pk": %d' % (self.opened_selling.id,)), -1)
+
+        # try to get a closed:
+        url = RestTest.BASE_URL + 'Selling/is_opened/%d' % (self.closed_selling.id,)
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 404)
+
+    def testUrlOpenedSellingCount(self):
+        url = RestTest.BASE_URL + 'Selling/is_opened/count' 
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        opened = Selling.Products.filter(is_opened).count()
+        self.failIfEqual(response.content.find('"result: %d"' %(opened)), -1)
+       
+#    def testUrlAddProduct(self):
+#        url = RestTest.BASE_URL + 'Selling/is_opened/1'
+#        params = {
+#            'id': '1'
+#        }
+#        response = self.client.post(url)
+#

@@ -1,17 +1,20 @@
 #!/usr/bin/python
 
+
+from settings import BASEDIR, APPNAME
+
 import locale
 import gettext
 import gtk.glade
 
-APP="empada"
-DIR="locale"
+APPNAME="empada"
+DIR=BASEDIR + "locale"
 
 locale.setlocale(locale.LC_ALL, '')
-gtk.glade.bindtextdomain(APP, DIR)
-gtk.glade.textdomain(APP)
-gettext.bindtextdomain(APP, DIR)
-gettext.textdomain(APP)
+gtk.glade.bindtextdomain(APPNAME, DIR)
+gtk.glade.textdomain(APPNAME)
+gettext.bindtextdomain(APPNAME, DIR)
+gettext.textdomain(APPNAME)
 
 
 import pos

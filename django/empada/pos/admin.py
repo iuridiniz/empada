@@ -2,6 +2,10 @@ from pos.models import *
 from django.contrib import admin
 from django.utils.translation import ugettext as _
 
+
+# TODO: move this to setting.py
+TEST_ALL=True
+
 class IngredientProductInline(admin.TabularInline):
     model = IngredientProduct
     extra = 10
@@ -74,20 +78,24 @@ class IngredientTypeAdmin(admin.ModelAdmin):
 admin.site.register(Unit, UnitAdmin)
 
 admin.site.register(Client, ClientAdmin)
-#admin.site.register(ClientCredit)
-#admin.site.register(ClientHistory)
+if TEST_ALL:
+    admin.site.register(ClientCredit)
+    admin.site.register(ClientHistory)
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductType, ProductTypeAdmin)
-#admin.site.register(ProductHistory)
+if TEST_ALL:
+    admin.site.register(ProductHistory)
 
-#admin.site.register(Selling)
-#admin.site.register(SellingProduct)
-#admin.site.register(SellingProductIngredient)
-#admin.site.register(SellingPayment)
+if TEST_ALL:
+    admin.site.register(Selling)
+    admin.site.register(SellingProduct)
+    admin.site.register(SellingProductIngredient)
+    admin.site.register(SellingPayment)
 
 admin.site.register(Ingredient, IngredientAdmin)
-#admin.site.register(IngredientProduct)
+if TEST_ALL:
+    admin.site.register(IngredientProduct)
+    admin.site.register(IngredientHistory)
 admin.site.register(IngredientType, IngredientTypeAdmin)
-#admin.site.register(IngredientHistory)
 
