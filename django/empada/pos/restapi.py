@@ -1,23 +1,54 @@
 from empada.pos.models import Product, Selling, SellingProduct
 
-from django.http import Http404
+from django.http import Http404, HttpResponse
 
 from django_restapi.model_resource import Collection, Entry, reverse
 from django_restapi.responder import JSONResponder
 from django_restapi.authentication import HttpBasicAuthentication
 
-product_list = Collection(
+import json
+
+def json_http_response(request, url, data=None):
+    data_content = {'url': url, 'result': data}
+    content = json.dumps(data_content) + "\n"
+    return HttpResponse(content, mimetype='application/json')
+    
+
+class ProductCollection(Collection):
+    #TODO: refactoring this to avoid duplicate code for count, maybe extending the class
+    #FIXME: count must be on __call__ not on read, READ is only for CRUD
+    def read(self, request, product_id = "0", to_count=False):
+        if to_count:
+            count = self.queryset.count()
+            #print "count:", count
+            return json_http_response(request, self.get_url(), count)
+        else:
+            return super(ProductCollection, self).read(request)
+
+product_list = ProductCollection(
     queryset = Product.objects.all(), 
     responder = JSONResponder(paginate_by=10),
     #authentication = HttpBasicAuthentication()
 )
 
-selling_opened_list = Collection(
-    queryset = Selling.objects.filter(is_opened=True),
-    responder = JSONResponder(paginate_by=10),
-)
+class SellingCollection(Collection):
+    #TODO: refactoring this to avoid duplicate code for count, maybe extending the class
+    #FIXME: count must be on __call__ not on read, READ is only for CRUD
+    def read(self, request, selling_id = "0", to_count=False, is_opened=False):
+        filtered_set = self.queryset._clone()
+        if is_opened:
+            filtered_set = self.queryset.filter(is_opened=True)
+        
+        if to_count:
+            count = filtered_set.count()
+            #print "is_opened", is_opened
+            return json_http_response(request, self.get_url(), count)
 
-selling_list = Collection(
+        selling_id = int(selling_id)
+        #print "Selling id: %d" % (selling_id,)
+        return self.responder.list(request, filtered_set)
+       
+selling_list = SellingCollection(
     queryset = Selling.objects.all(),
     responder = JSONResponder(paginate_by=10),
 )
