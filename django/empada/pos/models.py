@@ -487,6 +487,8 @@ class Selling(models.Model):
         
         self.save()
 
+        return payment.id
+
     pay.alters_data = True    
     
     def reopen(self):

@@ -1,4 +1,4 @@
-from empada.pos.models import Product, Selling, SellingProduct
+from empada.pos.models import Product, Selling, SellingProduct, SellingPayment
 
 from django.http import Http404, HttpResponse
 
@@ -103,6 +103,56 @@ selling_product_list = SellingProductCollection(
     #permitted_methods = ('GET', 'POST', 'PUT', 'DELETE'),
     permitted_methods = ('GET', 'POST'),
     entry_class = SellingProductEntry,
+)
+
+class SellingPaymentCollection(Collection):
+    def read(self, request, selling_id = "0"):
+        selling_id = int(selling_id)
+        if selling_id > 0:
+            filtered_set = self.queryset._clone()
+            filtered_set = filtered_set.filter(selling__id=selling_id)
+            return self.responder.list(request, filtered_set)
+        else:
+            return self.responder.list(request, self.queryset)
+
+    def create(self, request, selling_id = "0"):
+        selling_id = int(selling_id)
+        #print "Selling_id: ", selling_id
+        if selling_id > 0:
+            #selling
+            s = Selling.objects.get(id=selling_id)
+            data = self.receiver.get_post_data(request)
+            #amount
+            amount = float(data['amount'])
+            id = s.pay(amount=amount)
+
+            entry = self.get_entry(0, id)
+            response = entry.read(request)
+            response.status_code = 201
+            response['Location'] = entry.get_url()
+            return response
+        else:
+            response = self.responder.error(request, 405)
+            return response
+
+        return self.responder.error(request, 400)
+
+    def get_entry(self, selling_id, payment_id):
+        return super(SellingPaymentCollection, self).get_entry(payment_id)
+
+    def get_url(self):
+        return reverse(self, (), {'selling_id': self.model.id})
+
+class SellingPaymentEntry(Entry):
+    def get_url(self):
+        return reverse(self.collection, (), {'selling_id': self.model.selling.id, 'payment_id':self.model.id})
+
+selling_payment_list = SellingPaymentCollection(
+    queryset = SellingPayment.objects.all(),
+    responder = JSONResponder(paginate_by=10),
+    #permitted_methods = ('GET', 'POST', 'PUT', 'DELETE'),
+    permitted_methods = ('GET', 'POST'),
+    entry_class = SellingPaymentEntry,
 )
 
 #product_xml_resource = Collection(

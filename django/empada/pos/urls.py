@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from django.conf.urls.defaults import *
 
-from restapi import product_list, selling_list, selling_product_list
+from restapi import product_list, selling_list, selling_product_list, selling_payment_list
 
 urlpatterns = patterns('',
 
@@ -16,6 +16,11 @@ urlpatterns = patterns('',
 ###############################################################################
     (r'^json/Selling/(?P<selling_id>\d+)/Product/$', selling_product_list, {'is_entry':False}),
     (r'^json/Selling/(?P<selling_id>\d+)/Product/(?P<product_id>\d+)/$', selling_product_list, {'is_entry':True}),
+
+###############################################################################
+    (r'^json/Selling/(?P<selling_id>\d+)/Payment/$', selling_payment_list, {'is_entry':False}),
+    (r'^json/Selling/(?P<selling_id>\d+)/Payment/(?P<payment_id>\d+)/$', selling_payment_list, {'is_entry':True}),
+
 
 ###############################################################################
     (r'^json/Selling/is_opened/$', selling_list, {'is_opened':True, 'is_entry':False}),

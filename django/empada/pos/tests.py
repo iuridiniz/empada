@@ -10,6 +10,9 @@ from empada.pos.models import Selling, Product, SellingProduct, Unit, SellingPay
 
 from datetime import datetime
 
+
+import json
+
 class SalesOpenCloseTest(TestCase):
     TICKET=31
     def setUp(self):
@@ -378,7 +381,7 @@ class RestTest(TestCase):
         url = RestTest.BASE_URL + 'Selling/%d/Product/' % (self.opened_selling.id,)
         response = self.client.get(url)
         
-        self.failUnlessEqual(response.status_code, 200, "url: %s|%s" %(url,response.content))
+        self.failUnlessEqual(response.status_code, 200)
         self.failIfEqual(response.content.find('"pos.sellingproduct"'), -1)
         self.failIfEqual(response.content.find('"selling": %d' % (self.opened_selling.id,)), -1)
 
@@ -393,6 +396,52 @@ class RestTest(TestCase):
 
         self.failUnlessEqual(response.status_code, 201)
 
+    def testUrlAddPayment(self):
+        url = RestTest.BASE_URL + "Selling/%d/Payment/" % (self.opened_selling.id,)
 
+        self.opened_selling.addProduct(self.first_product)
 
+        params = {
+           'amount': self.first_product.price
+        }
+
+        response = self.client.post(url, params)
+        self.failUnlessEqual(response.status_code, 201)
+
+        data = json.loads(response.content)
+
+        self.assertEqual(data[0]["model"], "pos.sellingpayment")
+        self.assertAlmostEqual(data[0]["fields"]["amount"], self.first_product.price)
+        self.assertEqual(data[0]['fields']['selling'], self.opened_selling.id)
+
+    def testUrlCloseReopenSelling(self):
+        selling_id = self.opened_selling.id
+
+        #close
+        url = RestTest.BASE_URL + "Selling/is_opened/%d/close/" % (selling_id,)
+
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+
+        data = json.loads(response.content)
+        self.assertEqual(data['result'], True)
+
+        s = Selling.objects.get(id=selling_id)
+        self.assertTrue(s.is_closed)
+
+        #reopen
+        url = RestTest.BASE_URL + "Selling/is_opened/%d/reopen/" % (selling_id,)
+
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+
+        data = json.loads(response.content)
+        self.assertEqual(data['result'], True)
+
+        s = Selling.objects.get(id=selling_id)
+        self.assertTrue(s.is_opened)
+
+        
 
