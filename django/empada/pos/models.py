@@ -408,6 +408,7 @@ class Selling(models.Model):
     amount = property(__amount__)
 
     def addProduct(self, product, quantity=1, instructions="", price=None):
+        #print "On addProduct"
         if self.is_closed:
             raise OperationNotPermited, "Cannot add product to a closed selling"
         
@@ -424,6 +425,8 @@ class Selling(models.Model):
         else:
             sp = SellingProduct(product=product, selling=self, instructions=instructions, selling_unit_price=p, quantity=quantity)
             sp.save()
+
+        return sp.id
             
 
     def save(self, force_insert=False, force_update=False):
