@@ -1,0 +1,11 @@
+--- django_restapi/model_resource.py_old	2009-10-05 10:11:15.315960803 -0300
++++ django_restapi/model_resource.py	2009-10-05 10:13:31.532968771 -0300
+@@ -120,7 +120,7 @@
+                 entry = self.get_entry(*args, **kwargs)
+                 return self.dispatch(request, entry)
+             else:
+-                return self.dispatch(request, self)
++                return self.dispatch(request, self, *args, **kwargs)
+         except HttpMethodNotAllowed:
+             response = self.responder.error(request, 405)
+             response['Allow'] = ', '.join(self.permitted_methods)

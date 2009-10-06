@@ -367,14 +367,45 @@ class RestTest(TestCase):
         #self.failUnlessEqual(response.status_code, 404)
 
     def testUrlOpenedSellingCount(self):
-        #FIXME: We Trust on django_restapi, so we must use json to verify
         url = RestTest.BASE_URL + 'Selling/is_opened/count/' 
         response = self.client.get(url)
 
         self.failUnlessEqual(response.status_code, 200)
-        opened = Selling.objects.filter(is_opened=True).count()
-        #print "opened: ", opened
-        self.failIfEqual(response.content.find('"result": %d' %(opened,)), -1)
+        count = Selling.objects.filter(is_opened=True).count()
+        data = json.loads(response.content)
+
+        self.assertEqual(data['result'], count)
+
+
+    def testUrlSellingCount(self):
+        url = RestTest.BASE_URL + 'Selling/count/' 
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        count = Selling.objects.all().count()
+        data = json.loads(response.content)
+
+        self.assertEqual(data['result'], count)
+
+    def testUrlProductCount(self):
+        url = RestTest.BASE_URL + 'Product/count/' 
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        count = Product.objects.all().count()
+        data = json.loads(response.content)
+
+        self.assertEqual(data['result'], count)
+
+    def testUrlSellingPaymentCount(self):
+        url = RestTest.BASE_URL + "Selling/%d/Payment/count/" % (self.opened_selling.id,)
+        response = self.client.get(url)
+
+        self.failUnlessEqual(response.status_code, 200)
+        count = SellingPayment.objects.filter(selling__id=self.opened_selling.id).count()
+        data = json.loads(response.content)
+
+        self.assertEqual(data['result'], count)
 
     def testUrlSellingProducts(self):
         #FIXME: We Trust on django_restapi, so we must use json to verify
@@ -431,7 +462,7 @@ class RestTest(TestCase):
         self.assertTrue(s.is_closed)
 
         #reopen
-        url = RestTest.BASE_URL + "Selling/is_opened/%d/reopen/" % (selling_id,)
+        url = RestTest.BASE_URL + "Selling/is_closed/%d/reopen/" % (selling_id,)
 
         response = self.client.get(url)
 
