@@ -114,6 +114,20 @@
       </object>
     </child>
   </object>
+  <object class="GtkListStore" id="liststore1">
+    <columns>
+      <!-- column-name Product -->
+      <column type="gchararray"/>
+      <!-- column-name Price -->
+      <column type="gdouble"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Laranja</col>
+        <col id="1">12</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkWindow" id="window_selling">
     <property name="title">Ticket 71</property>
     <child>
@@ -269,10 +283,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkNotebook" id="notebook_sales_list">
+              <object class="GtkTreeView" id="treeview1">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="border_width">6</property>
+                <property name="model">liststore1</property>
               </object>
               <packing>
                 <property name="position">1</property>

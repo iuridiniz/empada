@@ -129,15 +129,15 @@ class Pos:
         #print BASE_URL + "Selling/"
         url_opened_sellings_count = BASE_URL + "Selling/is_opened/count/"
         url_closed_sellings_count = BASE_URL + "Selling/is_closed/count/"
-        url_closed_sellings = BASE_URL + "Selling/is_opened/"
-        url_opened_sellings = BASE_URL + "Selling/is_closed/"
+        url_opened_sellings = BASE_URL + "Selling/is_opened/"
+        url_closed_sellings = BASE_URL + "Selling/is_closed/"
        
         update_interface = False
         # opened sellings
         result = self.call_remote(url_opened_sellings_count)
         if result:
             if self.opened_sellings_count != result[0]['result']:
-                logging.info("Updating opened selling count to:" + str(self.opened_sellings_count))
+                logging.info("Updating opened selling count to:" + str(result[0]['result']))
                 self.opened_sellings_count = result[0]['result']
                 
                 result = self.call_remote(url_opened_sellings)
@@ -145,14 +145,14 @@ class Pos:
                 for i in result:
                     self.opened_sellings.append((i['pk'], i['fields']['ticket']))
 
-                logging.info("Current Opened Sellings: " + str(self.opened_sellings))
+                logging.info("Current opened sellings: " + str(self.opened_sellings))
                 update_interface = True
 
         # closed sellings
         result = self.call_remote(url_closed_sellings_count)
         if result:
             if self.closed_sellings_count != result[0]['result']:
-                logging.info("Updating closed selling count to:" + str(self.closed_sellings_count))
+                logging.info("Updating closed selling count to:" + str(result[0]['result']))
                 self.closed_sellings_count = result[0]['result']
                 
                 result = self.call_remote(url_closed_sellings)
@@ -160,7 +160,7 @@ class Pos:
                 for i in result:
                     self.closed_sellings.append((i['pk'], i['fields']['ticket']))
 
-                logging.info("Current Closed Sellings: " + str(self.closed_sellings))
+                logging.info("Current closed sellings: " + str(self.closed_sellings))
                 update_interface = True
 
         
