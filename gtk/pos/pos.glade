@@ -19,8 +19,8 @@
                 <property name="visible">True</property>
                 <child>
                   <object class="GtkLabel" id="label_opened">
-                    <property name="width_request">199</property>
-                    <property name="height_request">33</property>
+                    <property name="width_request">175</property>
+                    <property name="height_request">32</property>
                     <property name="visible">True</property>
                     <property name="label">Opened Sellings: 031</property>
                     <attributes>
@@ -28,23 +28,23 @@
                     </attributes>
                   </object>
                   <packing>
-                    <property name="x">120</property>
+                    <property name="x">112</property>
                     <property name="y">116</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="label_closed">
-                    <property name="width_request">239</property>
-                    <property name="height_request">47</property>
+                    <property name="width_request">175</property>
+                    <property name="height_request">32</property>
                     <property name="visible">True</property>
-                    <property name="label">Today Closed Sellings: 311</property>
+                    <property name="label">Closed Sellings: 311</property>
                     <attributes>
                       <attribute name="size" value="12000"/>
                     </attributes>
                   </object>
                   <packing>
-                    <property name="x">120</property>
-                    <property name="y">180</property>
+                    <property name="x">112</property>
+                    <property name="y">146</property>
                   </packing>
                 </child>
                 <child>
@@ -58,7 +58,7 @@
                     </attributes>
                   </object>
                   <packing>
-                    <property name="x">120</property>
+                    <property name="x">112</property>
                     <property name="y">11</property>
                   </packing>
                 </child>
@@ -109,117 +109,6 @@
           </object>
           <packing>
             <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkVBox" id="vbox1">
-            <property name="visible">True</property>
-            <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkVBox" id="vbox2">
-                <property name="visible">True</property>
-                <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkLabel" id="label1">
-                    <property name="visible">True</property>
-                    <property name="label" translatable="yes">label</property>
-                  </object>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkVBox" id="vbox3">
-                    <property name="visible">True</property>
-                    <property name="orientation">vertical</property>
-                    <child>
-                      <object class="GtkButton" id="button2">
-                        <property name="label" translatable="yes">button</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button3">
-                        <property name="label" translatable="yes">button</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button4">
-                        <property name="label" translatable="yes">button</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button5">
-                        <property name="label" translatable="yes">button</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="button6">
-                        <property name="label" translatable="yes">button</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
-                      </object>
-                      <packing>
-                        <property name="position">4</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="button1">
-                <property name="label" translatable="yes">button</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkImage" id="image1">
-                <property name="visible">True</property>
-                <property name="stock">gtk-missing-image</property>
-              </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
           </packing>
         </child>
       </object>

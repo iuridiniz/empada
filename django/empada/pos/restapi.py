@@ -9,7 +9,7 @@ from django_restapi.authentication import HttpBasicAuthentication
 import json
 
 def json_http_response(request, url, data=None):
-    data_content = {'url': url, 'result': data}
+    data_content = [{'url': url, 'result': data}]
     content = json.dumps(data_content) + "\n"
     return HttpResponse(content, mimetype='application/json')
 

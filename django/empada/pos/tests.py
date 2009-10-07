@@ -374,7 +374,7 @@ class RestTest(TestCase):
         count = Selling.objects.filter(is_opened=True).count()
         data = json.loads(response.content)
 
-        self.assertEqual(data['result'], count)
+        self.assertEqual(data[0]['result'], count)
 
 
     def testUrlSellingCount(self):
@@ -385,7 +385,7 @@ class RestTest(TestCase):
         count = Selling.objects.all().count()
         data = json.loads(response.content)
 
-        self.assertEqual(data['result'], count)
+        self.assertEqual(data[0]['result'], count)
 
     def testUrlProductCount(self):
         url = RestTest.BASE_URL + 'Product/count/' 
@@ -395,7 +395,7 @@ class RestTest(TestCase):
         count = Product.objects.all().count()
         data = json.loads(response.content)
 
-        self.assertEqual(data['result'], count)
+        self.assertEqual(data[0]['result'], count)
 
     def testUrlSellingPaymentCount(self):
         url = RestTest.BASE_URL + "Selling/%d/Payment/count/" % (self.opened_selling.id,)
@@ -405,7 +405,7 @@ class RestTest(TestCase):
         count = SellingPayment.objects.filter(selling__id=self.opened_selling.id).count()
         data = json.loads(response.content)
 
-        self.assertEqual(data['result'], count)
+        self.assertEqual(data[0]['result'], count)
 
     def testUrlSellingProducts(self):
         #FIXME: We Trust on django_restapi, so we must use json to verify
@@ -456,7 +456,7 @@ class RestTest(TestCase):
         self.failUnlessEqual(response.status_code, 200)
 
         data = json.loads(response.content)
-        self.assertEqual(data['result'], True)
+        self.assertEqual(data[0]['result'], True)
 
         s = Selling.objects.get(id=selling_id)
         self.assertTrue(s.is_closed)
@@ -469,7 +469,7 @@ class RestTest(TestCase):
         self.failUnlessEqual(response.status_code, 200)
 
         data = json.loads(response.content)
-        self.assertEqual(data['result'], True)
+        self.assertEqual(data[0]['result'], True)
 
         s = Selling.objects.get(id=selling_id)
         self.assertTrue(s.is_opened)
