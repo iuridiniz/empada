@@ -42,6 +42,7 @@ class Pos:
         #self.builder.set_translation_domain("pos")
         self.builder.add_from_file(GLADE_FILE)
 
+        self.status_hide_id = 0
         self.opened_sellings_count = -1
         self.closed_sellings_count = -1
         self.opened_sellings = []
@@ -52,7 +53,8 @@ class Pos:
 
         self.update_sellings()
         self.update_sellings_widgets()
-    
+   
+        self.flash(_("Welcome to EMPADA 0.1"))
     def __setup_widgets__(self):
         """
         Sets all gtk stuff
@@ -73,11 +75,43 @@ class Pos:
         b = self.builder.get_object("button_selling_list")
         #w = self.builder.get_object("window_selling")
 
-        b.connect("clicked", self.button_selling_list_clicked)
+        c = self.builder.get_object("combo_selling_list")
 
-    def button_selling_list_clicked(self, widget):
-        print widget
-        pass
+
+        # if not custom ticket clear the combo_box_entry on focus
+        clear = lambda *args: c.get_active() != -1 and c.child.set_text("")
+        c.child.connect("focus-in-event", clear)
+        #c.child.connect("changed", clear)
+        #c.child.set_override_mode(True)
+
+        # on enter simulate click on button
+        click = lambda *args: b.clicked()
+        c.child.connect("activate", click)
+
+        # setup behavior to click
+        b.connect("clicked", self.on_button_selling_list_clicked, c)
+
+    def flash(self, message):
+        if self.status_hide_id:
+            gobject.source_remove(self.status_hide_id)
+            self.status_hide_id = 0
+        s = self.builder.get_object("status")
+        s.show()
+        s.push(0, message)
+        self.status_hide_id = gobject.timeout_add(3000, self.hide_flash, s)
+
+    def hide_flash(self, status):
+        status.hide()
+        self.status_hide_id = 0
+        return False
+            
+    def on_button_selling_list_clicked(self, widget, combo_selling_list):
+        if combo_selling_list.get_active() == -1:
+            logging.info("Getting ticket:" + combo_selling_list.get_active_text())
+        else:
+            s_id, ticket_id = self.opened_sellings[combo_selling_list.get_active()]
+            logging.info("Getting selling:" + str(s_id))
+
 
     def __setup_updates__(self):
         self.gsource_id_update_sellings = gobject.timeout_add(2000, self.update_sellings)
@@ -88,6 +122,8 @@ class Pos:
             response = urllib2.urlopen(req)
         except urllib2.URLError:
             result = None
+            logging.error("Error while requesting: " + url)
+            self.flash(_("Cannot connect to server"))
         else:
             json_data = response.read()
             result = json.loads(json_data)
